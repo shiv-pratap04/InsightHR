@@ -1,0 +1,17 @@
+\section{Decision Support and HR Analytics}
+Decision support systems combine data models, analytical components, and presentation layers to assist semi-structured decisions \cite{power2002}. In people analytics, industry and research emphasise \emph{fairness}, \emph{interpretability}, and \emph{governance}: scores and flags should be explainable to employees and regulators where applicable \cite{barocas2019,deloitte2018people}.
+
+\section{Performance Management}
+Weighted composite scores are widely used to aggregate multiple KPIs (e.g.\ attendance, delivery, quality). Normalisation and explicit weights improve perceived fairness compared to opaque single numbers. Storing \textbf{breakdowns} alongside aggregates supports audits and trend analysis---a practice aligned with explainable reporting.
+
+\section{Workforce Planning and Task Assignment}
+Assignment problems can be framed as matching tasks to agents under capacity constraints. While integer programming and advanced solvers apply at scale, \textbf{heuristic scoring} (skills $+$ capacity $+$ penalty) offers a transparent baseline that communicates trade-offs to users---valuable in educational and pilot deployments.
+
+\section{Attrition and Retention}
+Attrition modelling ranges from survival analysis and gradient boosting to simple rule engines driven by domain thresholds (attendance drops, workload spikes, compensation equity). For a capstone prototype, \textbf{rule-based} models with documented factors preserve clarity and map cleanly to later supervised learning while data volume is limited.
+
+\section{Anomaly Detection}
+Univariate and multivariate anomaly detection includes z-scores, control charts, and isolation forests. For time series of performance metrics, comparing the latest observation to a local mean with a dispersion estimate (z-score style) is a classical, interpretable approach \cite{chandola2009}.
+
+\section{Gap Addressed by This Project}
+Many student projects stop at CRUD. This work contributes an \textbf{integrated} stack where each analytical output is paired with \textbf{explanation text} and \textbf{structured breakdowns}, and where administrative policy (weights) is first-class---bridging HR operations and transparent decision support.

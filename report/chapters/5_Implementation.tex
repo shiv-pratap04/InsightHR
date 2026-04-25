@@ -1,0 +1,38 @@
+\section{Repository Structure}
+The implementation resides in a monorepo-style layout:
+\begin{itemize}
+  \item \texttt{client/} --- Vite React application (\texttt{src/pages}, \texttt{components}, \texttt{layouts}, \texttt{services}, \texttt{store}).
+  \item \texttt{server/} --- Express application (\texttt{src/models}, \texttt{routes}, \texttt{controllers}, \texttt{services}, \texttt{middleware}, \texttt{seed}).
+\end{itemize}
+
+\section{Frontend}
+\subsection{Navigation and Guards}
+\texttt{ProtectedRoute} waits for session hydration then enforces authentication. \texttt{RoleRoute} restricts routes by role (admin, manager, employee). \texttt{DashboardLayout} provides sidebar navigation and profile menu with logout calling \texttt{/api/auth/logout}.
+
+\subsection{Forms and Validation}
+React Hook Form with Zod resolvers validates login, registration, employee, and task forms. User-facing errors render inline; global feedback uses toast notifications.
+
+\subsection{Dashboards and Charts}
+Recharts renders bar, line, area, and pie charts fed by existing APIs (employees, tasks, alerts, performance trends). This avoids duplicating aggregation logic in the client.
+
+\section{Backend}
+\subsection{Models}
+Mongoose schemas enforce enums (e.g.\ task status, alert type), references (\texttt{assignedTo}, \texttt{employeeId}), and timestamps. Pre-validate hooks ensure OAuth users do not require local passwords.
+
+\subsection{Performance Engine}
+Given employee metrics and optional overrides, the engine reads weights from \texttt{AppSettings}, normalises weights to sum~1, clamps inputs to $[0,100]$, applies safe defaults for missing values (recorded in \texttt{defaultsUsed}), computes contributions, and builds a short narrative comparing factors above/below the employee's local mean.
+
+\subsection{Task Allocation}
+For each active employee, compute skill match ratio, availability from workload, penalty from workload and active assignment count, and $\text{final} = \text{match} + \text{availability} - \text{penalty}$. Sort and slice top three; flag manual review when confidence is low.
+
+\subsection{Attrition, Anomaly, Promotion}
+Attrition uses additive rule scores with capped total and categorical bands. Anomaly service scans recent \texttt{PerformanceRecord} series for z-score style drops and heuristic rules (attendance delta, completion volatility, empty history). Promotion ranks employees with weighted factors and explanatory strings.
+
+\subsection{Seeding}
+\texttt{npm run seed} clears demo collections and inserts administrators, managers, many employees, tasks in multiple states, six monthly performance snapshots per employee, and diverse alerts---supporting immediate UI demonstration.
+
+\section{Configuration}
+Environment variables (\texttt{.env}) control MongoDB URI, JWT secret and expiry, client URL for CORS, and optional Google OAuth credentials. Example files document required keys without committing secrets.
+
+\section{Tooling}
+Server development uses \texttt{nodemon}; client uses Vite HMR. Production build: \texttt{npm run build} for static assets served separately from API.

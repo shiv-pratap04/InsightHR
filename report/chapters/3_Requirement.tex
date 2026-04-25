@@ -1,0 +1,75 @@
+\section{Stakeholders}
+\begin{itemize}
+  \item \textbf{Administrator:} full configuration, employee lifecycle, analytics oversight, weight settings.
+  \item \textbf{Manager:} team tasks, allocation, performance runs, attrition/promotion views, alerts.
+  \item \textbf{Employee:} personal dashboard, assigned tasks, own performance history, personal alerts.
+\end{itemize}
+
+\section{Functional Requirements}
+\subsection{Authentication and Authorisation}
+\begin{itemize}
+  \item Register and login with email/password; password hashing (bcrypt).
+  \item Optional Google OAuth~2.0 via Passport.js; JWT issued after success.
+  \item JWT delivered as HTTP-only cookie (Bearer token optional); logout clears session.
+  \item Role-based access control on API routes and UI navigation.
+\end{itemize}
+
+\subsection{Employee Management}
+\begin{itemize}
+  \item CRUD for employee profiles: department, designation, skills array, compensation and HR metrics, status, reporting manager, optional link to user account.
+  \item Validation: email format, numeric fields, non-empty required strings, valid references.
+\end{itemize}
+
+\subsection{Task Management}
+\begin{itemize}
+  \item CRUD for tasks: title, description, required skills, priority, deadline, estimated hours, status.
+  \item Assignment to one employee; guard against accidental double assignment without explicit override.
+  \item Recommendation endpoint returning top three candidates with scores and explanations; optional auto-assign.
+\end{itemize}
+
+\subsection{Performance Scoring}
+\begin{itemize}
+  \item Weighted score: $P = w_1 A + w_2 T + w_3 D + w_4 F$ with inputs normalised to $[0,100]$ and weights summing to~1 after normalisation.
+  \item Admin-configurable weights; persist breakdown and narrative explanation per calculation.
+  \item Trend and history APIs for charting.
+\end{itemize}
+
+\subsection{Analytics Modules}
+\begin{itemize}
+  \item \textbf{Attrition:} risk band, score, reasons, recommended actions, method label.
+  \item \textbf{Anomaly:} type, severity, reason, suggested action, explanation; statistical/rule hybrid.
+  \item \textbf{Promotion:} ranked candidates with scores and per-candidate explanations.
+\end{itemize}
+
+\subsection{Alerts and Dashboards}
+\begin{itemize}
+  \item Persist alerts (types: anomaly, attrition, performance-drop, promotion); list and mark-read.
+  \item Dashboards: aggregates, charts (e.g.\ workload, risk, task mix), recent alerts.
+\end{itemize}
+
+\section{Non-Functional Requirements}
+\begin{itemize}
+  \item \textbf{Security:} Helmet, CORS with credentials, input validation, no sensitive data in client storage for JWT cookie flow.
+  \item \textbf{Usability:} responsive layout, loading states, toasts, form validation messages.
+  \item \textbf{Maintainability:} modular server layers (routes, controllers, services, models); componentised UI.
+  \item \textbf{Demonstrability:} seed script with realistic users, employees, tasks, performance records, and alerts.
+\end{itemize}
+
+\section{Constraints}
+MongoDB availability; Google OAuth requires developer console configuration; browser third-party cookie policies do not affect same API host with credentialed XHR to backend origin.
+
+\begin{table}[H]
+  \centering
+  \caption{High-level requirement traceability (summary).}
+  \label{tab:req-trace}
+  \begin{tabular}{p{3.2cm}p{9cm}}
+    \toprule
+    \textbf{Theme} & \textbf{Mapped deliverables} \\
+    \midrule
+    Security & JWT cookie sessions, bcrypt, Helmet/CORS, RBAC middleware \\
+    Data model & Mongoose schemas for users, employees, tasks, performance, alerts, settings \\
+    Explainability & Breakdown objects, \texttt{explanation}/\texttt{method} fields on analytics responses \\
+    UX & Dashboards, validation, toasts, responsive layout \\
+    \bottomrule
+  \end{tabular}
+\end{table}

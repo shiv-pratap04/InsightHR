@@ -1,0 +1,177 @@
+\documentclass[a4paper, 11pt, oneside]{report}
+
+%----------------------------------------------------------------------------------------
+% Placeholders — replace before final submission
+%----------------------------------------------------------------------------------------
+\newcommand{\ProjectTitle}{InsightHR}
+\newcommand{\ProjectSubtitle}{Intelligent Employee Management \& Decision Support System}
+\newcommand{\ProjectCertificateTitle}{InsightHR: Intelligent Employee Management \& Decision Support System}
+\newcommand{\StudentName}{Your Name}
+\newcommand{\StudentRoll}{2201xxxx}
+\newcommand{\StudentSemester}{VI}
+\newcommand{\StudentEmail}{xxxx@iiitmanipur.ac.in}
+\newcommand{\SupervisorName}{Dr.\,........}
+\newcommand{\SupervisorDesignation}{Supervisor Designation}
+\newcommand{\SupervisorPhone}{+91\,xxxxxxxxx}
+\newcommand{\SupervisorEmail}{supervisor@iiitmanipur.ac.in}
+\newcommand{\ReportMonthYear}{April, 2026}
+\newcommand{\DeclarationDate}{DD-MM-YYYY}
+
+\newcommand{\plogo}{\fbox{$\mathcal{PL}$}}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fouriernc}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{longtable}
+\usepackage[nottoc]{tocbibind}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  tabsize=2
+}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue}
+% \usepackage{lipsum} % uncomment for dummy text
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{\baselineskip}
+  \vspace{0.75\baselineskip}
+  {\Huge \bfseries \ProjectTitle}\\[0.6\baselineskip]
+  {\large \ProjectSubtitle}
+  \vspace{0.75\baselineskip}
+  \vspace{2\baselineskip}
+  A report submitted for the course named Project - I (CS3201)
+  \vspace*{7\baselineskip}
+  Submitted By
+  \vspace{0.5\baselineskip}
+  {\scshape\Large \StudentName \\ \StudentSemester \\ \StudentRoll}
+  \vspace{0.5\baselineskip}
+  Supervised By
+  \vspace{0.5\baselineskip}
+  {\scshape\Large \SupervisorName}
+  \vspace{0.5\baselineskip}
+  \vfill
+  \begin{center}
+    \IfFileExists{report_file/iiit_manipur.png}{%
+      \includegraphics[width=5cm]{report_file/iiit_manipur.png}%
+    }{%
+      \fbox{\parbox[c][3cm][c]{5cm}{\centering \small [Place institute logo:\\ \texttt{report\_file/iiit\_manipur.png}]}}%
+    }
+  \end{center}
+  {\scshape\small Department of Computer Science and Engineering\\ Indian Institute of Information Technology Senapati, Manipur \\ \ReportMonthYear}
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+% Declaration
+%----------------------------------------------------------------------------------------
+\begin{center}
+  {\LARGE \textbf{Declaration}}
+\end{center}
+In this submission, I have expressed my idea in my own words, and I have adequately cited and referenced any ideas or words that were taken from another source. I also declare that I adhere to all principles of academic honesty and integrity and that I have not misrepresented or falsified any ideas, data, facts, or sources in this submission. If any violation of the above is made, I understand that the institute may take disciplinary action. Such a violation may also engender disciplinary action from the sources which were not properly cited or permission not taken when needed.
+
+\vspace{1cm}\hspace{8.35cm} \StudentName \\
+\vspace{1cm}\hspace{9cm} \StudentRoll \\
+\vspace{1cm} DATE: \DeclarationDate
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+% Certificate (bonafide)
+%----------------------------------------------------------------------------------------
+\begin{center}
+  \thispagestyle{empty}
+  \begin{table}
+    \centering
+    \IfFileExists{report_file/iiit_manipur.png}{%
+      \includegraphics[scale=0.2]{report_file/iiit_manipur.png}%
+    }{%
+      \fbox{\small Logo placeholder}%
+    }
+    \begin{tabular}{l}
+      Department of Computer Science and Engineering \\
+      Indian Institute of Information Technology Senapati, Manipur \\
+    \end{tabular}
+  \end{table}
+  \par\noindent\rule{\textwidth}{0.4pt}
+  \SupervisorName
+  \hspace*{\fill} Email: \href{mailto:\SupervisorEmail}{\SupervisorEmail}\\
+  \SupervisorDesignation
+  \hspace*{0pt}\hfill Contact No: \SupervisorPhone\\[2cm]
+  {\Huge \textbf{\emph{To Whom It May Concern}}}\\[2cm]
+  \linespread{1.13}
+  \large This is to certify that the project report entitled \textbf{``\ProjectCertificateTitle,''} submitted to the department of Computer Science and Engineering, Indian Institute of Information Technology Senapati, Manipur in partial fulfilment for the award of degree of Bachelor of Technology in Computer Science and Engineering is bona fide work carried out by \textbf{\StudentName} bearing roll number \StudentRoll.\\[2.0cm]
+  \hspace*{2.6in}\large{Signature of Supervisor}\\[0.3cm]
+  \hspace*{2.5in}\textbf{(\SupervisorName)}\\[0.5cm]
+\end{center}
+\vspace{0.5cm}
+Signature of the Examiner 1 \dotfill\\[0.5cm]
+Signature of the Examiner 2 \dotfill\\[0.5cm]
+Signature of the Examiner 3 \dotfill\\[0.5cm]
+Signature of the Examiner 4 \dotfill\\
+\newpage
+
+%----------------------------------------------------------------------------------------
+% Abstract
+%----------------------------------------------------------------------------------------
+\begin{abstract}
+Modern organisations need more than static employee records: they require \emph{decision support}---transparent scoring, workload-aware task assignment, and early signals for attrition or promotion readiness. This project presents \textbf{InsightHR}---an \textbf{Intelligent Employee Management \& Decision Support System}: a full-stack web application that combines role-based access, CRUD operations for employees and tasks, and \textbf{explainable analytics}. Performance is computed using a configurable weighted model over attendance, task completion, deadline adherence, and peer feedback, with stored breakdowns for audit and trend visualisation. A \textbf{smart task allocation} module ranks candidates using skill overlap, availability, and workload penalties, returning top recommendations with natural-language justifications. \textbf{Attrition risk}, \textbf{anomaly detection} (statistical and rule-based), and \textbf{promotion recommendations} are implemented as lightweight, interpretable engines suitable for demonstration and extension toward machine learning. The stack uses React (Vite), Tailwind/ShadCN-style UI, Node.js/Express, MongoDB, JWT with HTTP-only cookies, and optional Google OAuth~2.0. The outcome is a demo-ready system aligned with software engineering practice: validation, error handling, modular services, and report-oriented APIs.
+\end{abstract}
+\pagebreak
+
+%----------------------------------------------------------------------------------------
+% Acknowledgement
+%----------------------------------------------------------------------------------------
+\begin{center}
+  {\LARGE \textbf{Acknowledgement}}
+\end{center}
+\vspace{1cm}
+I express sincere gratitude to my supervisor, \SupervisorName, for guidance, feedback, and encouragement throughout this project. I thank the faculty of the Department of Computer Science and Engineering, IIIT Manipur, for foundational courses that enabled this work. I acknowledge open-source communities whose frameworks and libraries accelerated development. Finally, I thank my family and peers for their support.
+
+\vspace{1.5cm}
+\hspace{7cm} \StudentName\\
+\hspace{7cm} Roll: \StudentRoll
+
+\newpage
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\chapter{Introduction}
+\input{chapters/1_Introduction}
+
+\chapter{Literature Survey}
+\input{chapters/2_Literature_Survey}
+
+\chapter{Requirement Engineering}
+\input{chapters/3_Requirement}
+
+\chapter{System Design}
+\input{chapters/4_System_Design}
+
+\chapter{Implementation}
+\input{chapters/5_Implementation}
+
+\chapter{Results}
+\input{chapters/6_Results}
+
+\chapter{Conclusion}
+\input{chapters/7_Conclusion}
+
+\bibliography{report}
+\bibliographystyle{plain}
+
+\end{document}

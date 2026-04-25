@@ -1,0 +1,23 @@
+\section{Background}
+\textbf{InsightHR} is the working title of the software developed in this project: an intelligent employee management platform with embedded decision-support analytics. Human-resource (HR) and people-operations teams increasingly rely on digital systems to maintain employee master data, track performance, and coordinate work. Traditional \emph{employee portals} often reduce to create--read--update--delete (CRUD) screens with limited analytical depth. In contrast, a \textbf{decision support system (DSS)} aims to structure data, models, and explanations so managers can interpret recommendations rather than only viewing raw tables \cite{power2002}.
+
+\section{Problem Statement}
+Organisations face recurring questions: \emph{Who should receive the next critical task given skills and current load?} \emph{Which employees show early signals of disengagement or attrition?} \emph{How can performance be summarised fairly and explained to staff?} \emph{Who merits promotion discussion based on consistent evidence?} Answering these questions with spreadsheets alone is error-prone and weakly auditable. There is a need for an integrated system that (i)~unifies identity and authorisation, (ii)~maintains authoritative employee and task records, and (iii)~exposes \textbf{interpretable} analytics aligned with organisational policy (e.g.\ configurable weights).
+
+\section{Objectives}
+The primary objectives of this project are:
+\begin{itemize}
+  \item To design and implement a secure, role-based web application for employee and task management.
+  \item To provide a \textbf{performance scoring engine} with configurable weights and stored factor breakdowns for transparency.
+  \item To implement \textbf{smart task allocation} that ranks employees using skill match, availability, and workload penalties, with textual explanations.
+  \item To deliver \textbf{attrition risk estimation}, \textbf{anomaly detection} on performance history, and \textbf{promotion recommendations} using lightweight, explainable logic suitable for academic demonstration and future ML extension.
+  \item To present information through \textbf{role-specific dashboards} with charts and alerts for operational review.
+\end{itemize}
+
+\section{Scope}
+\textbf{In scope:} authentication (email/password and optional Google OAuth~2.0), JWT sessions via HTTP-only cookies, MongoDB persistence, REST APIs, React single-page client, seed data for demonstration, and documented analytics semantics.
+
+\textbf{Out of scope (explicit):} payroll processing, legal compliance certification, production-scale ML training pipelines, and integration with third-party HRIS beyond illustrative API design. Analytics are \textbf{rule-based and statistical} with clear labelling; they support decision support but are not a substitute for human judgement.
+
+\section{Report Organisation}
+Chapter~2 reviews related work. Chapter~3 captures requirements. Chapter~4 presents architecture and design. Chapter~5 describes implementation. Chapter~6 discusses results and testing. Chapter~7 concludes with limitations and future work.
