@@ -61,6 +61,14 @@ App: `http://localhost:5173`
 
 If Google env vars are missing, the API returns **503** with a clear message (safe fallback).
 
+### 5. OTP-based signup
+
+1. Request OTP using `POST /api/auth/register/request-otp` with `name`, `email`, and `password`.
+2. Verify OTP using `POST /api/auth/register/verify-otp` with `email` and `otp`.
+3. Account is created only after successful OTP verification (default role: `employee`).
+
+Set SMTP variables in `server/.env` for real email delivery (`SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`). If SMTP is not configured, OTP is logged on server and returned only in non-production mode for testing.
+
 ## Seed data (after `npm run seed`)
 
 Rough volume: **22 employees**, **25 tasks** (mix of pending / assigned / in-progress / completed), **6 performance records per employee** (Aug 2025–Jan 2026), **14 alerts**, departments include Engineering, Product, Design, HR, Data, Finance, Customer Success.

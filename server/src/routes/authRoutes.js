@@ -1,7 +1,15 @@
 const express = require('express');
 const passport = require('passport');
-const { register, login, logout, me, googleCallback } = require('../controllers/authController');
-const { registerRules, loginRules } = require('../validators/authValidators');
+const {
+  requestRegisterOtp,
+  verifyRegisterOtp,
+  register,
+  login,
+  logout,
+  me,
+  googleCallback,
+} = require('../controllers/authController');
+const { requestOtpRules, verifyOtpRules, loginRules } = require('../validators/authValidators');
 const { handleValidation } = require('../middleware/validate');
 const { authMiddleware } = require('../middleware/auth');
 
@@ -13,7 +21,9 @@ function googleEnabled() {
   );
 }
 
-router.post('/register', registerRules, handleValidation, register);
+router.post('/register/request-otp', requestOtpRules, handleValidation, requestRegisterOtp);
+router.post('/register/verify-otp', verifyOtpRules, handleValidation, verifyRegisterOtp);
+router.post('/register', verifyOtpRules, handleValidation, register);
 router.post('/login', loginRules, handleValidation, login);
 router.post('/logout', logout);
 router.get('/me', authMiddleware, me);

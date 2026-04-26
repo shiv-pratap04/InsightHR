@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,20 +15,44 @@ const schema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(8, 'Minimum 8 characters'),
+  otp: z.string().length(6, 'OTP must be 6 digits'),
 });
 
 export function Register() {
   const navigate = useNavigate();
   const setUser = useAuthStore((s) => s.setUser);
+  const [otpRequested, setOtpRequested] = useState(false);
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(schema) });
 
+  async function requestOtp() {
+    try {
+      const values = getValues();
+      const { data } = await api.post('/api/auth/register/request-otp', {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      });
+      setOtpRequested(true);
+      if (data.devOtp) {
+        toast.info(`Dev OTP: ${data.devOtp}`);
+      }
+      toast.success(data.explanation || 'OTP sent');
+    } catch {
+      /* interceptor */
+    }
+  }
+
   async function onSubmit(values) {
     try {
-      const { data } = await api.post('/api/auth/register', values);
+      const { data } = await api.post('/api/auth/register/verify-otp', {
+        email: values.email,
+        otp: values.otp,
+      });
       setUser(data.user);
       toast.success(data.explanation || 'Account created');
       navigate('/employee/dashboard');
@@ -60,9 +85,23 @@ export function Register() {
               <Input id="password" type="password" {...register('password')} />
               {errors.password && <p className="text-sm text-red-600">{errors.password.message}</p>}
             </div>
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating…' : 'Register'}
-            </Button>
+            {otpRequested && (
+              <div className="space-y-2">
+                <Label htmlFor="otp">OTP</Label>
+                <Input id="otp" placeholder="Enter 6-digit OTP" {...register('otp')} />
+                {errors.otp && <p className="text-sm text-red-600">{errors.otp.message}</p>}
+              </div>
+            )}
+            {!otpRequested ? (
+              <Button type="button" className="w-full" disabled={isSubmitting} onClick={requestOtp}>
+                Send OTP
+              </Button>
+            ) : null}
+            {otpRequested ? (
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? 'Verifying…' : 'Verify OTP & Register'}
+              </Button>
+            ) : null}
             <p className="text-center text-sm text-muted-foreground">
               Already have an account?{' '}
               <Link className="text-primary underline" to="/login">
