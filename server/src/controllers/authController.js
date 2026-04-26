@@ -114,6 +114,17 @@ async function verifyRegisterOtp(req, res) {
       role: 'employee',
     });
 
+    await Employee.create({
+      userId: user._id,
+      fullName: pending.name,
+      email: normalizedEmail,
+      department: 'General',
+      designation: 'Employee',
+      joiningDate: new Date(),
+      reportingManager: '',
+      status: 'active',
+    });
+
     await RegistrationOtp.deleteOne({ _id: pending._id });
 
     const token = signToken({ sub: user._id.toString(), role: user.role });
@@ -121,7 +132,7 @@ async function verifyRegisterOtp(req, res) {
     return res.status(201).json({
       success: true,
       user: { id: user._id, name: user.name, email: user.email, role: user.role },
-      explanation: 'OTP verified. Account created and session started.',
+      explanation: 'OTP verified. Account and employee profile created, session started.',
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message || 'OTP verification failed' });
