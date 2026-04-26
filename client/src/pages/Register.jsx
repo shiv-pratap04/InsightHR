@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { api } from '@/services/api';
+import { api, API_BASE } from '@/services/api';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -61,6 +61,10 @@ export function Register() {
     }
   }
 
+  function googleSignup() {
+    window.location.href = `${API_BASE}/api/auth/google`;
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-secondary/30">
       <Card className="w-full max-w-md">
@@ -101,6 +105,17 @@ export function Register() {
                 {isSubmitting ? 'Verifying…' : 'Verify OTP & Register'}
               </Button>
             ) : null}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase text-muted-foreground">
+                <span className="bg-card px-2">Or continue with</span>
+              </div>
+            </div>
+            <Button type="button" variant="outline" className="w-full" onClick={googleSignup}>
+              Continue with Google
+            </Button>
             <p className="text-center text-sm text-muted-foreground">
               Already have an account?{' '}
               <Link className="text-primary underline" to="/login">

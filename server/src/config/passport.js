@@ -1,6 +1,23 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/User');
+const Employee = require('../models/Employee');
+
+async function ensureEmployeeProfile(user) {
+  if (!user || user.role !== 'employee') return;
+  const exists = await Employee.findOne({ userId: user._id });
+  if (exists) return;
+  await Employee.create({
+    userId: user._id,
+    fullName: user.name,
+    email: user.email,
+    department: 'General',
+    designation: 'Employee',
+    joiningDate: new Date(),
+    reportingManager: '',
+    status: 'active',
+  });
+}
 
 function configurePassport() {
   const clientID = process.env.GOOGLE_CLIENT_ID;
@@ -31,6 +48,7 @@ function configurePassport() {
             if (avatar && !user.avatar) user.avatar = avatar;
             if (name && user.name !== name) user.name = name;
             await user.save();
+            await ensureEmployeeProfile(user);
             return done(null, user);
           }
 
@@ -42,6 +60,7 @@ function configurePassport() {
             password: undefined,
             role: 'employee',
           });
+          await ensureEmployeeProfile(user);
           return done(null, user);
         } catch (err) {
           return done(err, null);
