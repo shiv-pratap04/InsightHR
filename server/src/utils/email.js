@@ -2,26 +2,44 @@ const nodemailer = require('nodemailer');
 
 let cachedTransporter = null;
 
+function envValue(primary, fallback) {
+  return process.env[primary] || process.env[fallback];
+}
+
+function mailConfig() {
+  const host = envValue('SMTP_HOST', 'MAIL_HOST');
+  const user = envValue('SMTP_USER', 'MAIL_USER');
+  const pass = envValue('SMTP_PASS', 'MAIL_PASS');
+  const from = process.env.SMTP_FROM || process.env.MAIL_FROM || user;
+  const secureRaw = process.env.SMTP_SECURE || process.env.MAIL_SECURE;
+  const secure = String(secureRaw || 'false').toLowerCase() === 'true';
+  const defaultPort = secure ? 465 : 587;
+  const port = Number(process.env.SMTP_PORT || process.env.MAIL_PORT || defaultPort);
+  return { host, port, secure, user, pass, from };
+}
+
 function canSendEmail() {
+  const config = mailConfig();
   return Boolean(
-    process.env.SMTP_HOST &&
-      process.env.SMTP_PORT &&
-      process.env.SMTP_USER &&
-      process.env.SMTP_PASS &&
-      process.env.SMTP_FROM
+    config.host &&
+      config.port &&
+      config.user &&
+      config.pass &&
+      config.from
   );
 }
 
 function getTransporter() {
   if (cachedTransporter) return cachedTransporter;
+  const config = mailConfig();
 
   cachedTransporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: String(process.env.SMTP_SECURE || 'false').toLowerCase() === 'true',
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      user: config.user,
+      pass: config.pass,
     },
   });
 
@@ -30,7 +48,7 @@ function getTransporter() {
 
 async function sendOtpEmail({ to, otp, name }) {
   const transporter = getTransporter();
-  const from = process.env.SMTP_FROM;
+  const { from } = mailConfig();
 
   await transporter.sendMail({
     from,
